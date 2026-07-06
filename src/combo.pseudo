@@ -1,0 +1,55 @@
+///////////////////////////
+// ✨ Combo (Pseudocode) //
+///////////////////////////
+
+// First class data structures
+
+Atom        : string                        // atoms
+SExpr       : Atom | SExpr[]                    // nested symbolic expressions (list form)
+Abs         : {params: Atom[], body: Lmbd}      // abstraction
+App         : {body: Lmbd, args: Lmbd[]}        // application
+Call        : {func: Function, args: Lmbd[]}    // predefined function call
+Lmbd        : Abs | App | Call | SExpr          // lambda expression
+
+// Other data structures
+
+Module      : Map<string, Module | Function>
+Function    : {
+    type: "imp" | "fnc" | "rwr",
+    program: Statements | Lmbd | Rules
+}
+
+// Program
+
+function run(topModule: Module, path: string[], args: SExpr[]): Lmbd
+    content = topModule
+    for name in path
+        content = content[name]
+    
+    return call(content, args)
+
+function call(function: Function, args: Lmbd[]): Lmbd    
+    switch function.type
+        case "imp"
+            result = imp.interpret(function.program, args)
+            
+        case "fnc"
+            result = fnc.evaluate({body: function.program, args: args})
+        
+        case "rwr"
+            result = rwr.rewrite(function.program, ["main", ...args])
+
+    return result
+
+function resolve(expr: Lmbd): Lmbd
+    if expr is Abs or expr is App
+        return fnc.evaluate(expr)
+    
+    else if expr is Call
+        return call(expr.func, expr.args)
+        
+    else if expr is Atom
+        return expr
+    
+    return [resolve(e) for e in expr]
+

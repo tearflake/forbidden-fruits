@@ -1,0 +1,145 @@
+/////////////////////////////////////
+// ✨ Lambda Calculus (Pseudocode) //
+/////////////////////////////////////
+
+// Data structures
+
+Atom        : string                                // atoms
+SExpr       : Atom | SExpr[]                            // nested symbolic expressions (list form)
+Abs         : {params: Atom[], body: Lmbd}              // abstraction
+App         : {body: Lmbd, args: Lmbd[]}                // application
+Call        : {func: Function, args: Lmbd[]}            // predefined function call
+Lmbd        : Abs | App | Call | SExpr                  // lambda expression
+AbsNorm     : {param: Atom, body: LmbdNorm}             // abstraction
+AppNorm     : {body: LmbdNorm, arg: LmbdNorm}           // application
+LmbdNorm    : AbsNorm | AppNorm | SKI | Call | SExpr    // lambda expression
+SKI         : S | K | I                                 // SKI combinators
+
+// The algorithm
+
+function evaluate(expr: Lmbd): Lmbd
+    return denormalize(skiToLmbd(evalSki(lmbdToSki(normalize(expr)))))
+
+function normalize (expr: Lmbd): LmbdNorm
+    if expr is Atom or expr is Sexpr
+        return expr
+
+    else if expr is Call
+        return expr
+    
+    else if expr is Abs
+        if expr.params.length == 0
+            return normalize(expr.body)
+        
+        else
+            return {param: expr.params[0], body: normalize({params: expr.params[1..], body: expr.body})}
+            
+    else if expr is App
+        if expr.args.length == 0
+            return normalize(expr.body)
+        
+        else
+            return {body: normalize({body: expr.body, args: expr.args[0..expr.args.length - 1]}), arg: normalize(expr.args[expr.args.length - 1])}
+
+function lmbdToSki(expr: LmbdNorm): LmbdNorm
+    if expr is Atom or expr is Sexpr
+        return expr
+    
+    else if expr is Call
+        return expr
+    
+    else if expr is AbsNorm
+        body = lmbdToSki(expr.body)
+        if body == expr.param
+            return I
+        
+        else if body is AppNorm
+            return {
+                body: {
+                    body: S,
+                    arg: lmbdToSki({param: expr.param, body: body.body})
+                },
+                arg: lmbdToSki({param: expr.param, body: body.arg})
+            }
+        
+        else
+            return {body: K, arg: body}
+    
+    else if expr is AppNorm
+        return {body: lmbdToSki(expr.body), arg: lmbdToSki(expr.arg)}
+
+function evalSki(expr: LmbdNorm): LmbdNorm
+    if expr is AppNorm
+        left = evalSki(expr.body)
+
+        // I x
+        if left is I
+            return evalSki(expr.arg)
+
+        // K x y
+        else if left is AppNorm && left.body is K
+            return evalSki(left.arg)
+
+        // S f g x
+        else if left is AppNorm && left.body is AppNorm && left.body.body is S
+            return evalSki({
+                body: {
+                    body: left.body.arg,
+                    arg: expr.arg
+                },
+                arg: {
+                    body: left.arg,
+                    arg: expr.arg
+                }
+            })
+
+        else
+            return {
+                body: left,
+                arg: expr.arg
+            }
+
+    else if expr is Call
+        return combo.resolve({func: expr.func, args: [evalSki(a) for a in args]})
+    
+    else
+        return expr
+
+function skiToLmbd(expr: LmbdNorm): LmbdNorm
+    if expr is I
+        return {param: "x", body: "x"}
+    
+    else if expr is K
+        return {param: "x", body: {param: "y", body: "x"}}
+    
+    else if expr is S
+        return {param: "x", body: {param: "y", body: {param: "z", body: {body: {body: "x", arg: "z"}, arg: {body: "y", arg: "z"}}}}}
+    
+    else if expr is AppNorm
+        return {body: skiToLmbd(expr.body), arg: skiToLmbd(expr.arg)}
+
+    else
+        return expr
+
+function denormalize(expr: LmbdNorm): Lmbd
+    if expr is Atom
+        return expr
+    
+    else if expr is AbsNorm
+        params = []
+        tmpExpr = expr
+        while tmpExpr is AbsNorm
+            params.push(tmpExpr.param)
+            tmpExpr = tmpExpr.body
+        
+        return {params: params, body: denormalize(tmpExpr)}
+            
+    else if expr is AppNorm
+        tmpExpr = expr
+        args = []
+        while tmpExpr is AppNorm
+            args.unshift(denormalize(tmpExpr.arg))
+            tmpExpr = tmpExpr.body
+        
+        return {body: denormalize(tmpExpr), args: args}
+
