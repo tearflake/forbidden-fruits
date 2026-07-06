@@ -1,6 +1,6 @@
 # Forbidden Fruits
 
-This repository represents an intellectual installation, and contains some of my experiments in making programming frameworks. The experiments include framework specifications, implementation pseudo code, and a live testing playground.
+This repository represents an intellectual installation, and contains some of my experiments in making programming frameworks. The experiments include implementation pseudo code.
 
 Here they are:
 
