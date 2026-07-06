@@ -21,10 +21,8 @@ Function    : {
 
 // Program
 
-function run(topModule: Module, path: string[], args: SExpr[]): Lmbd
-    content = topModule
-    for name in path
-        content = content[name]
+function main(topModule: Module, args: SExpr[]): Lmbd
+    content = topModule["main"]
     
     return call(content, args)
 
