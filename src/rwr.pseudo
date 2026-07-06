@@ -61,7 +61,7 @@ function rewriteOnce(rules: Rules, expr: Lmbd): (Lmbd, Bool)
 function tryMatch(expr: Lmbd, pattern: SExpr, env: Env): Env | null
     if pattern is Atom
         if pattern is quoted
-            return (sexpr == unquoted pattern) ? env : null
+            return (expr == unquoted pattern) ? env : null
 
         else
             if pattern not in env

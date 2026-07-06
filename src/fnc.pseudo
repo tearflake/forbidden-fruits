@@ -100,7 +100,7 @@ function evalSki(expr: LmbdNorm): LmbdNorm
             }
 
     else if expr is Call
-        return combo.resolve({func: expr.func, args: [evalSki(a) for a in args]})
+        return combo.resolve({func: expr.func, args: [evalSki(a) for a in expr.args]})
     
     else
         return expr

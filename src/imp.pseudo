@@ -67,7 +67,7 @@ function interpret(program: Program, args: Lmbd): Lmbd
     
     return execute(program.statements, env)
 
-function execute(statements: Statements, env: Env): Lmbd
+function execute(statements: Statement[], env: Env): Lmbd
     for stmt in statements
         switch stmt.type
             case "assign":
