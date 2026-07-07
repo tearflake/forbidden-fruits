@@ -13,7 +13,7 @@ Here they are:
 * rwr - simple rewriting programming framework
 * combo - a single framework combining the above three programming paradigms
 
-Have fun exploring!
+Have fun exploring: [tutorial](./docs/tutorial.md)
 
 ## Warning: Very Restrictive License
 
