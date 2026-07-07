@@ -4,7 +4,7 @@
 
 # Forbidden Fruits
 
-This repository represents an intellectual installation, and contains some of my experiments in making programming frameworks. The experiments include implementation pseudo code.
+This repository represents an intellectual installation, and contains some of my experiments in making programming frameworks. The experiments include relaxed BNF and implementation pseudo code.
 
 Here they are:
 
