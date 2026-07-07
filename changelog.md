@@ -1,4 +1,4 @@
-# Forbidden Fruits Changelog
+# Combo Changelog
 
 - Jul, 2026.
     - initial commit
