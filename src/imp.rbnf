@@ -1,4 +1,4 @@
-<imp> := (IMP (PARAMS <atomic>+) <stmt>+)
+<imp> := (IMP (PARAMS <atomic>+)? (VARS <atomic>+)? <stmt>+)
 
 <stmt> := <assign>
         | <if>
@@ -15,7 +15,7 @@
 
 <while> := (WHILE <sexpr> <stmt>+)
 
-<foreach> := (FOREACH <sexpr> <stmt>+)
+<foreach> := (FOREACH <atomic> <sexpr> <stmt>+)
 
 <return> := (RETURN <sexpr>)
 

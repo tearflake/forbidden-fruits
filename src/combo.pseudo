@@ -22,7 +22,9 @@ Function    : {
 // Program code
 
 function main(topModule: Module, args: SExpr[]): Lmbd
-    content = topModule["main"]
+    content = resolveFunctions(topModule)["main"]
+    if content == undefined
+        Error(`Missing 'main' function`)
     
     return call(content, args)
 
@@ -32,16 +34,16 @@ function call(function: Function, args: Lmbd[]): Lmbd
             result = imp.interpret(function.program, args)
             
         case "fnc"
-            result = fnc.evaluate({body: function.program, args: args})
+            result = fnc.evaluate(function.program, args)
         
         case "rwr"
-            result = rwr.rewrite(function.program, ["main", ...args])
+            result = rwr.rewrite(function.program, args)
 
     return result
 
 function resolve(expr: Lmbd): Lmbd
     if expr is Abs or expr is App
-        return fnc.evaluate(expr)
+        return fnc.evaluate(expr, [])
     
     else if expr is Call
         return call(expr.func, expr.args)

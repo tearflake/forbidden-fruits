@@ -1,4 +1,4 @@
-<rwr> := (RWR (PARAMS <atomic>+) <rule>+)
+<rwr> := (RWR <rule>+)
 
-<rule> := (RULE (READ <sexpr>) (WRITE <sexpr>))
+<rule> := (RULE (VARS <atomic>+)? (READ <sexpr>) (WRITE <sexpr>))
 

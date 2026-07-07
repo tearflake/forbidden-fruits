@@ -22,7 +22,8 @@ Rules       : Rule[]             // ruleset
 
 // Core Interpreter Loop
 
-function rewrite(rules: Rules, expr: Lmbd): SExpr
+function rewrite(rules: Rules, args: Lmbd[]): SExpr
+    expr = ["start", ...args]
     changed = true
     while changed
         changed = false

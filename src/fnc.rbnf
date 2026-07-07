@@ -1,4 +1,4 @@
-<fnc> := (FNC (PARAMS <atomic>+) <lmbd>)
+<fnc> := (FNC <lmbd>)
 
 <lmbd> := <abs>
         | <app>
@@ -6,5 +6,5 @@
 
 <abs> := (ABS <atomic>+ <lmbd>)
 
-<app> := (APP <lmbd> <atomic>+)
+<app> := (APP <lmbd> <lmbd>+)
 

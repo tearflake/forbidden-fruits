@@ -14,5 +14,3 @@
         | <fnc>
         | <rwr>
 
-<call> := (CALL <path> <sexpr>+)
-

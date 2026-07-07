@@ -23,8 +23,8 @@ Assign      : {
 If          : {
     type: "if",
     condition: SExpr,
-    then: Statement[],
-    else: Statement[]
+    then: Statements,
+    else: Statements
 }
 Switch      : {
     type: "switch",
@@ -34,18 +34,18 @@ Switch      : {
 Case        :  {
     type: "case",
     match: Atom,
-    body: Statement
+    body: Statements
 }
 While       : {
     type: "while",
     condition: SExpr,
-    body: Statement[]
+    body: Statements
 }
 ForEach     : {
     type: "foreach",
     var: Atom,
     elements: SExpr,
-    body: Statement[]
+    body: Statements
 }
 Return      : {
     type: "return",
@@ -53,12 +53,13 @@ Return      : {
 }
 Program : {                                     // program
     params: Atom[];
-    statements: Statement[]  
+    statements: Statements
 }
+Statements  : Statement[]
 
 // Program code
 
-function interpret(program: Program, args: Lmbd): Lmbd
+function interpret(program: Program, args: Lmbd[]): Lmbd
     env = {}
     i = 0
     for p in program.params
@@ -67,7 +68,7 @@ function interpret(program: Program, args: Lmbd): Lmbd
     
     return execute(program.statements, env)
 
-function execute(statements: Statement[], env: Env): Lmbd
+function execute(statements: Statements, env: Env): Lmbd
     for stmt in statements
         switch stmt.type
             case "assign":

@@ -17,7 +17,10 @@ SKI         : S | K | I                                 // SKI combinators
 
 // Program code
 
-function evaluate(expr: Lmbd): Lmbd
+function evaluate(expr: Lmbd, args: Lmbd[]): Lmbd
+    if args.length > 0
+        expr = {body: expr, args: args}
+    
     return denormalize(skiToLmbd(evalSki(lmbdToSki(normalize(expr)))))
 
 function normalize (expr: Lmbd): LmbdNorm
