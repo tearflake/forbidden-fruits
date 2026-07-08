@@ -1,0 +1,126 @@
+//////////////////////////////////
+// ✨ Rewring Mode (Pseudocode) //
+//////////////////////////////////
+
+// First class data structures
+
+Atom        : string                        // atoms
+SExpr       : Atom | SExpr[]                    // nested symbolic expressions (list form)
+Abs         : {params: Atom[], body: Lmbd}      // abstraction
+App         : {body: Lmbd, args: Lmbd[]}        // application
+Call        : {func: Function, args: Lmbd[]}    // predefined function call
+Lmbd        : Abs | App | Call | SExpr          // lambda expression
+
+// Other data structures
+
+Env         : Map<Atom, Lmbd>   // enviroment variables
+Rule        : {
+    consume: SExpr,              // CONSUME pattern
+    produce: Lmbd                // PRODUCE template
+}
+Rules       : Rule[]             // ruleset
+
+// Core Interpreter Loop
+
+function rewrite(rules: Rules, args: Lmbd[]): SExpr
+    expr = ["start", ...args]
+    changed = true
+    while changed
+        changed = false
+        expr, didChange = rewriteOnce(rules, expr)
+        if didChange
+            changed = true
+
+    return expr
+
+// One-Step Rewriting
+
+function rewriteOnce(rules: Rules, expr: Lmbd): (Lmbd, Bool)
+    // Ignore unreduced expressions
+    if expr is Abs or expr is App or expr is Call
+        return expr, false
+    
+    // Try to rewrite deepest subexpressions first (inside-out)
+    if expr is SExpr
+        for i in range(length(expr))
+            newExpr, changed = rewriteOnce(rules, expr[i])
+            if changed
+                return newExpr, true
+
+    // Then try to rewrite expr
+    for rule in rules
+        matchEnv = tryMatch(expr, rule.consume, {})
+        if matchEnv != null
+            // Substitute vars and resolve function calls
+            newExpr = resolve(rule.produce, matchEnv)
+            return newExpr, true
+
+    return expr, false
+
+// Pattern Matching
+
+function tryMatch(expr: Lmbd, pattern: SExpr, env: Env): Env | null
+    if pattern is Atom
+        if pattern is quoted
+            return (expr == unquoted pattern) ? env : null
+
+        else
+            if pattern not in env
+                env[pattern] = sexpr
+                return env
+                
+            else if env[pattern] == sexpr
+                return env
+
+            return null
+
+    if expr is Abs or expr is App or expr is Call
+        return null
+    
+    if length(expr) != length(pattern)
+        return null
+    
+    if pattern[0] != expr[0]
+        return null
+    
+    for i in [1..length(pattern) - 1]
+        env = tryMatch(expr[i], pattern[i], env)
+        if env == null
+            return null
+    
+    return env
+
+// function resolution
+
+function resolve(expr: Lmbd, env: Env): Lmbd {
+    result = substitute(expr, env, [])
+
+    return combo.resolve(result)
+}
+
+// substitution
+
+function substitute(pattern: Lmbd, env: Env, shadow: Atom[]): Lmbd
+    if pattern is Abs
+        return {
+            params: pattern.params,
+            body: substitute(pattern.body, env, [...shadow, ...pattern.params])
+        }
+        
+    else if pattern is App
+        return {
+            body: substitute(pattern.body, env, shadow),
+            args: [substitute(a, env, shadow) for a in pattern.args]
+        }
+        
+    else if pattern is Atom
+        if pattern is quoted or pattern in shadow
+            return pattern
+
+        else if pattern in env
+            return env[pattern]
+
+        return pattern
+
+    return [substitute(p, env, shadow) for p in pattern]
+
