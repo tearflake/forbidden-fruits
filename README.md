@@ -10,7 +10,7 @@ The embracing programming entirety provides a simple unifying framework in spite
 
 Here, we can find the framework tutorial, implementation specification, and live online testing playground:
 
-* [tutorial](./docs/main.md)
+* [introduction](./docs/main.md)
 * [specification](./specs/main.md)
 * [playground](./playground/) `// under construction //`
 
