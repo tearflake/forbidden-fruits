@@ -53,7 +53,7 @@ function reduceSExpr(expr: SExpr): LmbdNorm
     return expr
 
 function reduceCall(call: Call): LmbdNorm
-    return normalize(evalCall({func: call.func, args: args.map(reduce)})
+    return normalize(cmb.call(call.func, call.args.map(reduce)})
 
 function reduceAbs(abs: AbsNorm): LmbdNorm
     const body = reduce(abs.body)

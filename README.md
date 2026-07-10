@@ -2,7 +2,7 @@
 // under construction //
 ```
 
-# Combo3 Framework
+# Combo Framework
 
 This repository represents an intellectual installation, and contains selected work from programming industry. The selected work spans over a closed range of three well known programming paradigms that occupy certain important spots in between, but not including the assembly and logic programming.
 

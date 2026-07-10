@@ -1,4 +1,4 @@
-# Combo3 Programming Framework Introduction
+# Combo Programming Framework Introduction
 
 ## Introduction
 
